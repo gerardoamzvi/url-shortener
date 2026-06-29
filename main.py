@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 import string
 import random
@@ -26,7 +27,7 @@ def root():
 
 @app.post("/shorten")
 def shorten_url(url_request: URLRequest):
-    if not url_request.url.startswith("http://", "https://"):
+    if not url_request.url.startswith(("http://", "https://")):
         raise HTTPException(status_code=400, detail="Invalid URL")
     short_code = generate_unique_short_code()
     urls[short_code] = url_request.url
@@ -34,8 +35,8 @@ def shorten_url(url_request: URLRequest):
 
 @app.get("/{code}")
 def redirect_to_url(code: str):
-    if short_code not in urls:
+    if code not in urls:
         raise HTTPException(status_code=404, detail="Short code not found")
-    return RedirectResponse(urls[short_code])
+    return RedirectResponse(urls[code])
 
 
