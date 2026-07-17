@@ -5,6 +5,7 @@ import string
 import random
 
 urls : dict[str, str] = {}
+
 class URLRequest(BaseModel):
     url: str
 
